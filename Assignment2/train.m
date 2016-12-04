@@ -80,9 +80,9 @@ for epoch = 1:epochs
     count =  count + 1;
     this_chunk_CE = this_chunk_CE + (CE - this_chunk_CE) / count;
     trainset_CE = trainset_CE + (CE - trainset_CE) / m;
-    fprintf(1, '\rBatch %d Train CE %.3f', m, this_chunk_CE);
+    %fprintf(1, '\rBatch %d Train CE %.3f', m, this_chunk_CE);
     if mod(m, show_training_CE_after) == 0
-      fprintf(1, '\n');
+      %fprintf(1, '\n');
       count = 0;
       this_chunk_CE = 0;
     end
@@ -99,7 +99,8 @@ for epoch = 1:epochs
 
     %% HIDDEN LAYER.
     % FILL IN CODE. Replace the line below by one of the options.
-    embed_to_hid_weights_gradient = zeros(numhid1 * numwords, numhid2);
+    % embed_to_hid_weights_gradient = zeros(numhid1 * numwords, numhid2);
+    embed_to_hid_weights_gradient = embedding_layer_state * back_propagated_deriv_1';
     % Options:
     % (a) embed_to_hid_weights_gradient = back_propagated_deriv_1' * embedding_layer_state;
     % (b) embed_to_hid_weights_gradient = embedding_layer_state * back_propagated_deriv_1';
@@ -107,7 +108,8 @@ for epoch = 1:epochs
     % (d) embed_to_hid_weights_gradient = embedding_layer_state;
 
     % FILL IN CODE. Replace the line below by one of the options.
-    hid_bias_gradient = zeros(numhid2, 1);
+    % hid_bias_gradient = zeros(numhid2, 1);
+    hid_bias_gradient = sum(back_propagated_deriv_1, 2);
     % Options
     % (a) hid_bias_gradient = sum(back_propagated_deriv_1, 2);
     % (b) hid_bias_gradient = sum(back_propagated_deriv_1, 1);
@@ -115,7 +117,8 @@ for epoch = 1:epochs
     % (d) hid_bias_gradient = back_propagated_deriv_1';
 
     % FILL IN CODE. Replace the line below by one of the options.
-    back_propagated_deriv_2 = zeros(numhid2, batchsize);
+    % back_propagated_deriv_2 = zeros(numhid2, batchsize);
+    back_propagated_deriv_2 = embed_to_hid_weights * back_propagated_deriv_1;
     % Options
     % (a) back_propagated_deriv_2 = embed_to_hid_weights * back_propagated_deriv_1;
     % (b) back_propagated_deriv_2 = back_propagated_deriv_1 * embed_to_hid_weights;
@@ -159,7 +162,7 @@ for epoch = 1:epochs
 
     % VALIDATE.
     if mod(m, show_validation_CE_after) == 0
-      fprintf(1, '\rRunning validation ...');
+      %fprintf(1, '\rRunning validation ...');
       if OctaveMode
         fflush(1);
       end
@@ -170,7 +173,7 @@ for epoch = 1:epochs
       expanded_valid_target = expansion_matrix(:, valid_target);
       CE = -sum(sum(...
         expanded_valid_target .* log(output_layer_state + tiny))) /datasetsize;
-      fprintf(1, ' Validation CE %.3f\n', CE);
+      %fprintf(1, ' Validation CE %.3f\n', CE);
       if OctaveMode
         fflush(1);
       end
