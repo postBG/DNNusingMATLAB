@@ -11,11 +11,10 @@ function ret = cd1(rbm_w, visible_data)
     v1 = sample_bernoulli(probability_for_v0);
     
     probability_for_h1 = visible_state_to_hidden_probabilities(rbm_w, v1);
-    h1 = sample_bernoulli(probability_for_h1);
     
     
     data_goodness_gradient = configuration_goodness_gradient(v0, h0);
-    sample_goodness_gradient = configuration_goodness_gradient(v1, h1);
+    sample_goodness_gradient = configuration_goodness_gradient(v1, probability_for_h1);
     
     ret = data_goodness_gradient - sample_goodness_gradient;
 end
